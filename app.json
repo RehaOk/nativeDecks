@@ -1,0 +1,12 @@
+{
+  "name": "nativeDecks",
+  "displayName": "nativeDecks",
+  "expo": {
+    "name": "nativeDecks",
+    "slug": "nativeDecks",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
