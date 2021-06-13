@@ -13,14 +13,21 @@ import { TabActions } from "@react-navigation/native";
 const NewDeckView = ({ navigation }) => {
   const jumpToActionDecks = TabActions.jumpTo("Decks");
   const [title, onChangeTitle] = React.useState("");
+  const [error, setError] = React.useState(false);
   const onPress = async () => {
-    await saveDeckTitle(title);
-    navigation.dispatch(jumpToActionDecks);
+    if (!!title.trim()) {
+      setError(false);
+      await saveDeckTitle(title);
+      navigation.dispatch(jumpToActionDecks);
+    } else {
+      setError(true);
+    }
   };
   return (
     <View style={styles.container}>
       <View style={styles.containerInner}>
         <Text>What is the title of your new deck?</Text>
+        {error && <Text style={{ color: "red" }}>Please enter a title</Text>}
         <SafeAreaView>
           <TextInput
             style={styles.input}
@@ -28,7 +35,11 @@ const NewDeckView = ({ navigation }) => {
             value={title}
             placeholder=" Deck Title"
           />
-          <TouchableOpacity style={styles.buttonWhite} onPress={onPress}>
+          <TouchableOpacity
+            style={styles.buttonWhite}
+            disable={!title.trim()}
+            onPress={onPress}
+          >
             <Text style={{ color: "black" }}>Submit</Text>
           </TouchableOpacity>
         </SafeAreaView>

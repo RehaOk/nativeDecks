@@ -12,9 +12,14 @@ import { addCardToDeck } from "../../utils/storage";
 const NewQuestionView = ({ navigation, route }) => {
   const [question, setQuestion] = React.useState("");
   const [answer, setAnswer] = React.useState("");
-
+  const [error, setError] = React.useState(false);
   return (
     <View style={styles.container}>
+      {error && (
+        <Text style={{ color: "red" }}>
+          Please enter both question and an answer
+        </Text>
+      )}
       <TextInput
         style={styles.input}
         onChangeText={setQuestion}
@@ -29,13 +34,19 @@ const NewQuestionView = ({ navigation, route }) => {
       />
       <TouchableOpacity
         style={styles.buttonBlack}
+        disable={!question.trim() || !answer.trim()}
         onPress={async () => {
-          await addCardToDeck(route.params.deckTitle, {
-            question,
-            answer,
-          });
-          const popAction = StackActions.pop(1);
-          navigation.dispatch(popAction);
+          if (!!question.trim() && !!answer.trim()) {
+            await addCardToDeck(route.params.deckTitle, {
+              question,
+              answer,
+            });
+            setError(false);
+            const popAction = StackActions.pop(1);
+            navigation.dispatch(popAction);
+          } else {
+            setError(true);
+          }
         }}
       >
         <Text style={{ color: "white" }}>Submit</Text>

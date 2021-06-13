@@ -35,6 +35,11 @@ const QuizView = ({ navigation, route }) => {
         setCurrentQuestion(questions[currentQuestionIndex]);
       } else {
         // set final page
+        setRenderFinalCard(true);
+        // reset values
+        currentQuestionIndex = 0;
+        correctAnswerCount = 0;
+        incorrectAnswerCount = 0;
       }
     };
     obtainDeck();
@@ -90,28 +95,43 @@ const QuizView = ({ navigation, route }) => {
   return (
     <>
       {renderFinalCard ? (
-        <View style={styles.finalContainer}>
-          <Text>{finalCardText}</Text>
-          <TouchableOpacity
-            style={styles.buttonWhite}
-            onPress={() => {
-              setCurrentQuestion(questions[currentQuestionIndex]);
-              setCardSide(true);
-              setRenderFinalCard(false);
-            }}
-          >
-            <Text style={{ color: "black" }}>Restart Quiz</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonBlack}
-            onPress={() => {
-              const popAction = StackActions.pop(1);
-              navigation.dispatch(popAction);
-            }}
-          >
-            <Text style={{ color: "white" }}>Go back</Text>
-          </TouchableOpacity>
-        </View>
+        questions.length !== 0 ? (
+          <View style={styles.finalContainer}>
+            <Text>{finalCardText}</Text>
+            <TouchableOpacity
+              style={styles.buttonWhite}
+              onPress={() => {
+                setCurrentQuestion(questions[currentQuestionIndex]);
+                setCardSide(true);
+                setRenderFinalCard(false);
+              }}
+            >
+              <Text style={{ color: "black" }}>Restart Quiz</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonBlack}
+              onPress={() => {
+                const popAction = StackActions.pop(1);
+                navigation.dispatch(popAction);
+              }}
+            >
+              <Text style={{ color: "white" }}>Go back</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.finalContainer}>
+            <Text>Please add a card first</Text>
+            <TouchableOpacity
+              style={styles.buttonBlack}
+              onPress={() => {
+                const popAction = StackActions.pop(1);
+                navigation.dispatch(popAction);
+              }}
+            >
+              <Text style={{ color: "white" }}>Go back</Text>
+            </TouchableOpacity>
+          </View>
+        )
       ) : (
         <>
           <View style={styles.cardTracker}>

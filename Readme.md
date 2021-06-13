@@ -11,3 +11,7 @@
 
 - Run `npm install` on the root directory
 - Run `expo start` on the root directory
+
+# Tested Platforms
+
+    - Android 9
