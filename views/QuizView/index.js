@@ -7,8 +7,12 @@ import {
   Platform,
 } from "react-native";
 import CardFlip from "react-native-card-flip";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, StackActions } from "@react-navigation/native";
 import { getDeck } from "../../utils/storage";
+import {
+  clearLocalNotification,
+  setLocalNotification,
+} from "../../utils/notfications";
 
 let questions = [];
 let currentQuestionIndex = 0;
@@ -35,6 +39,10 @@ const QuizView = ({ navigation, route }) => {
     };
     obtainDeck();
   }, [isFocused]);
+
+  React.useEffect(() => {
+    clearLocalNotification().then(setLocalNotification);
+  }, [renderFinalCard]);
 
   const onButtonPress = (buttonType) => {
     switch (buttonType) {
@@ -84,6 +92,25 @@ const QuizView = ({ navigation, route }) => {
       {renderFinalCard ? (
         <View style={styles.finalContainer}>
           <Text>{finalCardText}</Text>
+          <TouchableOpacity
+            style={styles.buttonWhite}
+            onPress={() => {
+              setCurrentQuestion(questions[currentQuestionIndex]);
+              setCardSide(true);
+              setRenderFinalCard(false);
+            }}
+          >
+            <Text style={{ color: "black" }}>Restart Quiz</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonBlack}
+            onPress={() => {
+              const popAction = StackActions.pop(1);
+              navigation.dispatch(popAction);
+            }}
+          >
+            <Text style={{ color: "white" }}>Go back</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <>
@@ -123,7 +150,7 @@ const QuizView = ({ navigation, route }) => {
                     setCardSide(true);
                     setTimeout(() => {
                       onButtonPress("correct");
-                    }, 1000);
+                    }, 1500);
                   } else {
                     onButtonPress("correct");
                   }
@@ -140,7 +167,7 @@ const QuizView = ({ navigation, route }) => {
                     setCardSide(true);
                     setTimeout(() => {
                       onButtonPress("incorrect");
-                    }, 1000);
+                    }, 1500);
                   } else {
                     onButtonPress("incorrect");
                   }
@@ -196,6 +223,23 @@ const styles = StyleSheet.create({
       ios: { fontFamily: "Arial" },
       android: { fontFamily: "Roboto" },
     }),
+  },
+  buttonWhite: {
+    marginBottom: 10,
+    alignItems: "center",
+    backgroundColor: "#fff",
+    width: 300,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  buttonBlack: {
+    alignItems: "center",
+    backgroundColor: "#000",
+    width: 300,
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
   },
   buttonWhite: {
     marginBottom: 10,

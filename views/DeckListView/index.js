@@ -13,6 +13,7 @@ import { StackActions, useIsFocused } from "@react-navigation/native";
 
 import NewDeckView from "../NewDeckView";
 import { getDecks } from "../../utils/storage";
+import { setLocalNotification } from "../../utils/notfications";
 
 const DeckListViewIndex = ({ navigation }) => {
   const isFocused = useIsFocused();
@@ -28,6 +29,10 @@ const DeckListViewIndex = ({ navigation }) => {
     retriveDecks();
     /* }); */
     /* return unsubscribe; */
+  }, [isFocused]);
+
+  React.useEffect(() => {
+    setLocalNotification();
   }, [isFocused]);
 
   return (
